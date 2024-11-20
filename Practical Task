@@ -1,0 +1,109 @@
+**Java Installation Steps**
+
+Step 1 : 
+
+1. Download the Latest Version of java from https://www.oracle.com/java/technologies/downloads/#jdk23-mac
+2. Choose the latest macOS version and download the .dmg file.
+Step 2 : Install Java
+Open the .dmg file once it has downloaded.
+Run the installer.
+Step 3 : Set the JAVA_HOME Environment Variable
+Open the Terminal.
+Find the installed JDK path. Open Terminal and run the following command:
+
+/usr/libexec/java_home
+Edit the ~/.bash_profile File
+Open your ~/.bash_profile file in a text editor (or ~/.bashrc, depending on your setup).
+vi ~/.bash_profile
+Step 4 :  Set the JAVA_HOME Variable
+Once the file is open in the editor, add the following lines to  set the JAVA_HOME environment variable:
+export JAVA_HOME=$(/usr/libexec/java_home) export PATH=$JAVA_HOME/bin:$PATH
+Step 5 : Apply the Changes
+After modifying the ~/.bash_profile, you'll need to apply the changes by running : 
+      source ~/.bash_profile
+Step 6 : Verify the JAVA_HOME Variable
+To verify that JAVA_HOME is correctly set, run:
+echo $JAVA_HOME
+
+**Maven Installation Steps**
+
+1. Visit the Apache Maven Website
+Go to the official Apache Maven download page: 
+https://maven.apache.org/download.cgi
+
+2. Download the Binary Archive
+On the download page, find the "Binary zip archive" section under "Files".
+Click on the "apache-maven-3.9.9-bin.tar.gz" link (replace X.X.X with the latest version number).
+
+3. Install Apache Maven
+
+After downloading the .tar.gz file, follow these steps to install Maven on macOS:
+
+1. Open Terminal and navigate to the directory where the downloaded .tar.gz file is located (e.g., Downloads).
+cd ~/Downloads
+2.  Extract the tar.gz file using the tar command
+tar -xvzf apache-maven-3.9.9-bin.tar.gz
+3.  Move the extracted files to a preferred directory, such as /opt:
+    sudo mv apache-maven-3.9.9 /opt/maven
+4.Set Up Environment Variables
+           vi ~/.bash_profile
+Add the following lines to the file to set the M2_HOME and MAVEN_HOME environment variables and add Maven to your PATH:
+     export M2_HOME=/opt/maven
+     export MAVEN_HOME=/opt/maven
+     export PATH=$M2_HOME/bin:$PATH
+
+
+Reload your shell configuration:
+source ~/.bash_profile 
+
+Verify the Installation
+After setting up the environment variables, verify that Maven is installed correctly by running:
+mvn -version
+
+**Perform validation to check if the project is correct**
+mvn validate
+
+**Build JAR artifact from source code, run the application locally and see the web interface in the browser**
+
+Build the project
+mvn clean install
+Run the Application
+mvn spring-boot:run
+Check localhost website will be loaded
+Increase project Major version (e.g. from 3.2.0 to 4.0.0) without interactive mode. 
+Use release plugin.
+Step 1 : 
+pom.xml
+<version>4.0.0-SNAPSHOT</version>
+Step 2:
+Use the Maven Release Plugin
+mvn release:prepare -DreleaseVersion=4.0.0 -DdevelopmentVersion=4.1.0-SNAPSHOT -DautoVersionSubmodules=true -Darguments="-Dmaven.test.skip=true" -DpushChanges=false
+mvn release:perform -Darguments="-Dmaven.test.skip=true"
+
+Interactive mode
+mvn release:prepare
+mvn release:perform
+
+Add SCM
+<scm> 
+      <url>https://github.com/Prathushadevijsgd/spring-petclinic.git</url>
+      <developerConnection>scm:git:https://github.com/Prathushadevijsgd/spring-petclinic.git</developerConnection>
+      <connection>scm:git:https://github.com/Prathushadevijsgd/spring-petclinic.git</connection>
+      <tag>HEAD</tag> 
+  </scm>
+
+git add pom.xml
+
+git commit -m "Update pom.xml with SCM information"
+
+mvn release:prepare -DreleaseVersion=4.0.0 -DdevelopmentVersion=4.1.0-SNAPSHOT -DautoVersionSubmodules=true -Darguments="-Dmaven.test.skip=true" -DpushChanges=false
+
+mvn release:perform -Darguments="-Dmaven.test.skip=true"
+
+release:prepare: Prepares the project for release by updating the version, tagging the release, and committing the changes.
+-DreleaseVersion=4.0.0: Sets the release version. This is the new version that will be used for the release (e.g., 4.0.0).
+-DdevelopmentVersion=4.1.0-SNAPSHOT: Sets the new development version for the next development cycle after the release. 
+-DautoVersionSubmodules=true: Automatically updates submodules in case you have a multi-module project.
+-Darguments="-Dmaven.test.skip=true": Skips tests during the release process (useful for continuous integration).
+-DpushChanges=false: Prevents Maven from automatically pushing the changes to the remote repository. You can push the changes manually later if needed.
+
